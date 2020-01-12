@@ -1,1 +1,1 @@
-case class Song(id: Int, artist: String, title: String)
+case class Song(id: Int, artist: String, title: String) extends Resource
