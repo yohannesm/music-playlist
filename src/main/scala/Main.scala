@@ -1,5 +1,52 @@
+import io.circe._
+import io.circe.generic.semiauto._
+import io.circe.parser._
+
+import scala.io.Source
 
 object Main extends App {
 
+//  def extractObject[A](a: Decoder.Result[A])= {
+//      a match {
+//        case Left(failure) => println(s"Failed in decoding because of $failure")
+//        case Right(value) => value
+//      }
+//    }
+//  }
+
+  implicit val userDecoder: Decoder[User] = deriveDecoder[User]
+  implicit val userEncoder: Encoder[User] = deriveEncoder[User]
+  implicit val playListDecoder: Decoder[Playlist] = deriveDecoder[Playlist]
+  implicit val playListEncoder: Encoder[Playlist] = deriveEncoder[Playlist]
+  implicit val SongDecoder: Decoder[Song] = deriveDecoder[Song]
+  implicit val SongEncoder: Encoder[Song] = deriveEncoder[Song]
+
   println("Main is running!")
+  val inputFile = Source.fromFile("mixtape-data.json").getLines.mkString
+  val inputJson = parse(inputFile).getOrElse(Json.Null)
+  val cursor: HCursor = inputJson.hcursor
+
+  val decodedUsers = cursor.downField("users").values.getOrElse(Vector.empty[Json]).map(_.as[User])
+  val users = decodedUsers.map{ eitherUser =>
+    eitherUser match {
+      case Left(failure) => {
+        println(s"Failed in decoding because of $failure")
+        User(-1, "Invalid User")
+      }
+      case Right(user) => user
+    }}.filterNot(_.id == -1)
+  println(users)
+  val decodedPlaylists = cursor.downField("playlists").values.getOrElse(Vector.empty[Json]).map(_.as[Playlist])
+  println(decodedPlaylists)
+  val playlists = decodedPlaylists.map{ eitherPlaylist =>
+    eitherPlaylist match {
+      case Left(failure) => {
+        println(s"Failed in decoding because of $failure")
+        Playlist(-1, -1, Vector.empty[Int])
+      }
+      case Right(playlist) => playlist
+    }}.filterNot(_.id == -1)
+  //println(playlists)
+
+  //println(inputJson)
 }
