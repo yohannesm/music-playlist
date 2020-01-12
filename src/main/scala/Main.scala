@@ -6,14 +6,6 @@ import scala.io.Source
 
 object Main extends App {
 
-//  def extractObject[A](a: Decoder.Result[A])= {
-//      a match {
-//        case Left(failure) => println(s"Failed in decoding because of $failure")
-//        case Right(value) => value
-//      }
-//    }
-//  }
-
   implicit val userDecoder: Decoder[User] = deriveDecoder[User]
   implicit val userEncoder: Encoder[User] = deriveEncoder[User]
   implicit val playListDecoder: Decoder[Playlist] = deriveDecoder[Playlist]
@@ -36,8 +28,8 @@ object Main extends App {
       case Right(user) => user
     }}.filterNot(_.id == -1)
   println(users)
+
   val decodedPlaylists = cursor.downField("playlists").values.getOrElse(Vector.empty[Json]).map(_.as[Playlist])
-  println(decodedPlaylists)
   val playlists = decodedPlaylists.map{ eitherPlaylist =>
     eitherPlaylist match {
       case Left(failure) => {
@@ -46,7 +38,18 @@ object Main extends App {
       }
       case Right(playlist) => playlist
     }}.filterNot(_.id == -1)
-  //println(playlists)
+  println(playlists)
+
+  val decodedSongs = cursor.downField("songs").values.getOrElse(Vector.empty[Json]).map(_.as[Song])
+  val songs = decodedSongs.map{ eitherSongs =>
+    eitherSongs match {
+      case Left(failure) => {
+        println(s"Failed in decoding because of $failure")
+        Song(-1, "", "")
+      }
+      case Right(song) => song
+    }}.filterNot(_.id == -1)
+  println(songs)
 
   //println(inputJson)
 }
