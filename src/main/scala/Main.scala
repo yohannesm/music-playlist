@@ -13,13 +13,15 @@ import scala.io.Source
 object Main extends App {
 
   def handleInput(inputJson: String): (Users, Playlists, Songs) = {
-    (Users(Vector.empty), Playlists(Vector.empty), Songs(Vector.empty))
+    (new Users(Vector.empty), new Playlists(Vector.empty), new Songs(Vector.empty))
   }
 
-  sealed trait Resources
-  case class Users(users: Vector[User]) extends Resources
-  case class Playlists(playlists: Vector[Playlist]) extends Resources
-  case class Songs(songs: Vector[Song]) extends Resources
+  def handleOutput(users: Users, playlists: Playlists, songs: Songs): Unit = ???
+
+//  sealed trait Resources
+//  case class Users(users: Vector[User]) extends Resources
+//  case class Playlists(playlists: Vector[Playlist]) extends Resources
+//  case class Songs(songs: Vector[Song]) extends Resources
 
   implicit val userDecoder: Decoder[User] = deriveDecoder[User]
   implicit val userEncoder: Encoder[User] = deriveEncoder[User]
