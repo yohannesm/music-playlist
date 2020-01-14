@@ -1,5 +1,7 @@
 import java.io.{BufferedWriter, File, FileWriter}
 
+import cats.syntax.functor._
+
 import io.circe._
 import io.circe.generic.semiauto._
 import io.circe.parser._
@@ -9,6 +11,10 @@ import io.circe.syntax._
 import scala.io.Source
 
 object Main extends App {
+
+  def handleInput(inputJson: String): (Users, Playlists, Songs) = {
+    (Users(Vector.empty), Playlists(Vector.empty), Songs(Vector.empty))
+  }
 
   sealed trait Resources
   case class Users(users: Vector[User]) extends Resources
@@ -21,10 +27,28 @@ object Main extends App {
   implicit val playListEncoder: Encoder[Playlist] = deriveEncoder[Playlist]
   implicit val SongDecoder: Decoder[Song] = deriveDecoder[Song]
   implicit val SongEncoder: Encoder[Song] = deriveEncoder[Song]
+//  implicit val OperationDecoder: Decoder[Operation] = deriveDecoder[Operation]
+//  implicit val OperationEncoder: Encoder[Operation] = deriveEncoder[Operation]
+
+//  object GenericDerivation {
+//    implicit val encodeResource: Encoder[Resource] = Encoder.instance {
+//      case song @ Song(_, _, _) => song.asJson
+//      case playlist @ Playlist(_, _, _) => playlist.asJson
+//      case user @ User( _, _) => user.asJson
+//      case _ => throw new RuntimeException("This encoding for Resource type is not supported")
+//    }
+//
+//    implicit val decodeResource: Decoder[Resource] = Decoder.instance {
+//      List[Decoder[Resource]](
+//        Decoder[Song].widen, Decoder[User].widen, Decoder[Playlist].widen
+//      ).iterator.reduceLeft(_ or _)
+//    }
+//  }
 
   println("Main is running!")
   val inputFile = Source.fromFile("mixtape-data.json").getLines.mkString
   val inputJson = parse(inputFile).getOrElse(Json.Null)
+  //if JsonNull then throw some exception or printout failure
   val cursor: HCursor = inputJson.hcursor
 
   val decodedUsers = cursor.downField("users").values.getOrElse(Vector.empty[Json]).map(_.as[User])
@@ -60,14 +84,34 @@ object Main extends App {
     }}.filterNot(_.id == -1)
   //println(songs)
 
+  //now need to parse the operations.
+
+  val operationsFile = Source.fromFile("small-operations.json").getLines.mkString
+  val operationsJson = parse(operationsFile).getOrElse(Json.Null)
+  val opCursor = operationsJson.hcursor
+  println(operationsJson)
+
+//  val decodedOperations = opCursor.downField("operations").values.getOrElse(Vector.empty[Json]).map(_.as[Operation])
+//  val operations = decodedOperations.map{ eitherOp =>
+//    eitherOp match {
+//      case Left(failure) => {
+//        println(s"Failed in decoding because of $failure")
+//        Operation(-1, "", "", Song(-1, "", ""))
+//      }
+//      case Right(op) => op
+//    }
+//  }.filterNot(_.id == -1)
+
+  //println(operations)
+
   //-----------------end input part
   //--------------start output part
 
-  val outputUsers = Users(users.toVector).asJson
-  val outputPlaylists = Playlists(playlists.toVector).asJson
-  val outputSongs = Songs(songs.toVector).asJson
-  val listResources = Json.fromValues(List(outputUsers, outputPlaylists, outputSongs)).spaces2
-  Utility.writeFile(filename = "output.json", List(listResources))
+//  val outputUsers = Users(users.toVector).asJson
+//  val outputPlaylists = Playlists(playlists.toVector).asJson
+//  val outputSongs = Songs(songs.toVector).asJson
+//  val listResources = Json.fromValues(List(outputUsers, outputPlaylists, outputSongs)).spaces2
+//  Utility.writeFile(filename = "output.json", List(listResources))
 
   //println(inputJson)
 }
