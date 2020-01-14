@@ -8,6 +8,9 @@ import io.circe.parser._
 import io.circe.generic.auto._
 import io.circe.syntax._
 
+import io.circe.generic.extras.Configuration
+import io.circe.generic.extras.auto._
+
 import scala.io.Source
 
 object Main extends App {
@@ -18,10 +21,7 @@ object Main extends App {
 
   def handleOutput(users: Users, playlists: Playlists, songs: Songs): Unit = ???
 
-//  sealed trait Resources
-//  case class Users(users: Vector[User]) extends Resources
-//  case class Playlists(playlists: Vector[Playlist]) extends Resources
-//  case class Songs(songs: Vector[Song]) extends Resources
+  implicit val genDevConfig: Configuration = Configuration.default.withDiscriminator("what_am_i")
 
   implicit val userDecoder: Decoder[User] = deriveDecoder[User]
   implicit val userEncoder: Encoder[User] = deriveEncoder[User]
@@ -29,8 +29,8 @@ object Main extends App {
   implicit val playListEncoder: Encoder[Playlist] = deriveEncoder[Playlist]
   implicit val SongDecoder: Decoder[Song] = deriveDecoder[Song]
   implicit val SongEncoder: Encoder[Song] = deriveEncoder[Song]
-//  implicit val OperationDecoder: Decoder[Operation] = deriveDecoder[Operation]
-//  implicit val OperationEncoder: Encoder[Operation] = deriveEncoder[Operation]
+  implicit val OperationDecoder: Decoder[Operation] = deriveDecoder[Operation]
+  implicit val OperationEncoder: Encoder[Operation] = deriveEncoder[Operation]
 
 //  object GenericDerivation {
 //    implicit val encodeResource: Encoder[Resource] = Encoder.instance {
@@ -93,7 +93,7 @@ object Main extends App {
   val opCursor = operationsJson.hcursor
   println(operationsJson)
 
-//  val decodedOperations = opCursor.downField("operations").values.getOrElse(Vector.empty[Json]).map(_.as[Operation])
+  val decodedOperations = opCursor.downField("operations").values.getOrElse(Vector.empty[Json]).map(_.as[Operation])
 //  val operations = decodedOperations.map{ eitherOp =>
 //    eitherOp match {
 //      case Left(failure) => {
