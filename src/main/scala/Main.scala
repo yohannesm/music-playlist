@@ -3,17 +3,23 @@ import java.io.{BufferedWriter, File, FileWriter}
 import cats.syntax.functor._
 
 import io.circe._
-import io.circe.generic.semiauto._
-import io.circe.parser._
-import io.circe.generic.auto._
-import io.circe.syntax._
 
 import io.circe.generic.extras.Configuration
 import io.circe.generic.extras.auto._
+import io.circe.syntax._
+import io.circe.parser._
 
 import scala.io.Source
 
 object Main extends App {
+
+  implicit val genDevConfig: Configuration = Configuration.default.withDiscriminator("discriminator")
+  sealed trait Resource
+  case class Playlist(id: Int, user_id: Int, song_ids: List[Int]) extends Resource
+  case class Song(id: Int, artist: String, title: String) extends Resource
+  case class User(id: Int, name: String) extends Resource
+
+  case class Operation(id: Int, action: String, resource: String, metadata: Resource)
 
   def handleInput(inputJson: String): (Users, Playlists, Songs) = {
     (new Users(Vector.empty), new Playlists(Vector.empty), new Songs(Vector.empty))
@@ -21,16 +27,15 @@ object Main extends App {
 
   def handleOutput(users: Users, playlists: Playlists, songs: Songs): Unit = ???
 
-  implicit val genDevConfig: Configuration = Configuration.default.withDiscriminator("what_am_i")
 
-  implicit val userDecoder: Decoder[User] = deriveDecoder[User]
-  implicit val userEncoder: Encoder[User] = deriveEncoder[User]
-  implicit val playListDecoder: Decoder[Playlist] = deriveDecoder[Playlist]
-  implicit val playListEncoder: Encoder[Playlist] = deriveEncoder[Playlist]
-  implicit val SongDecoder: Decoder[Song] = deriveDecoder[Song]
-  implicit val SongEncoder: Encoder[Song] = deriveEncoder[Song]
-  implicit val OperationDecoder: Decoder[Operation] = deriveDecoder[Operation]
-  implicit val OperationEncoder: Encoder[Operation] = deriveEncoder[Operation]
+//  implicit val userDecoder: Decoder[User] = deriveDecoder[User]
+//  implicit val userEncoder: Encoder[User] = deriveEncoder[User]
+//  implicit val playListDecoder: Decoder[Playlist] = deriveDecoder[Playlist]
+//  implicit val playListEncoder: Encoder[Playlist] = deriveEncoder[Playlist]
+//  implicit val SongDecoder: Decoder[Song] = deriveDecoder[Song]
+//  implicit val SongEncoder: Encoder[Song] = deriveEncoder[Song]
+//  implicit val OperationDecoder: Decoder[Operation] = deriveDecoder[Operation]
+//  implicit val OperationEncoder: Encoder[Operation] = deriveEncoder[Operation]
 
 //  object GenericDerivation {
 //    implicit val encodeResource: Encoder[Resource] = Encoder.instance {
@@ -43,7 +48,7 @@ object Main extends App {
 //    implicit val decodeResource: Decoder[Resource] = Decoder.instance {
 //      List[Decoder[Resource]](
 //        Decoder[Song].widen, Decoder[User].widen, Decoder[Playlist].widen
-//      ).iterator.reduceLeft(_ or _)
+//      ).reduceLeft(_ or _)
 //    }
 //  }
 
@@ -69,7 +74,7 @@ object Main extends App {
     eitherPlaylist match {
       case Left(failure) => {
         println(s"Failed in decoding because of $failure")
-        Playlist(-1, -1, Vector.empty[Int])
+        Playlist(-1, -1, List.empty[Int])
       }
       case Right(playlist) => playlist
     }}.filterNot(_.id == -1)
@@ -93,18 +98,18 @@ object Main extends App {
   val opCursor = operationsJson.hcursor
   println(operationsJson)
 
-  val decodedOperations = opCursor.downField("operations").values.getOrElse(Vector.empty[Json]).map(_.as[Operation])
-//  val operations = decodedOperations.map{ eitherOp =>
-//    eitherOp match {
-//      case Left(failure) => {
-//        println(s"Failed in decoding because of $failure")
-//        Operation(-1, "", "", Song(-1, "", ""))
-//      }
-//      case Right(op) => op
-//    }
-//  }.filterNot(_.id == -1)
+  val decodedOperations = opCursor.downField("operations").values.get.map(_.as[Operation])
+  val operations = decodedOperations.map{ eitherOp =>
+    eitherOp match {
+      case Left(failure) => {
+        println(s"Failed in decoding because of $failure")
+        Operation(-1, "", "", Song(-1, "", ""))
+      }
+      case Right(op) => op
+    }
+  }.filterNot(_.id == -1)
 
-  //println(operations)
+  println(operations)
 
   //-----------------end input part
   //--------------start output part

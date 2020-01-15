@@ -1,3 +1,3 @@
-trait Resource
+//trait Resource
 
 

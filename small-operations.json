@@ -7,7 +7,8 @@
       "metadata": {
         "id": "41",
         "artist": "Kenshi Yonezu",
-        "title": "Peace Sign"
+        "title": "Peace Sign",
+        "discriminator": "Song"
       }
     },
     {
@@ -21,7 +22,8 @@
           "1",
           "41",
           "21"
-        ]
+        ],
+        "discriminator": "Playlist"
       }
     },
     {
@@ -34,7 +36,8 @@
         "song_ids": [
           "8",
           "32"
-        ]
+        ],
+        "discriminator": "Playlist"
       }
     }
   ]

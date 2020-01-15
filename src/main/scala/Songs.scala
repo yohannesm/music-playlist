@@ -1,3 +1,5 @@
+import Main.Song
+
 import scala.collection.mutable
 
 class Songs(private val inputSongs: Iterable[Song]) extends Resources{

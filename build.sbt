@@ -4,14 +4,13 @@ version := "0.1"
 
 scalaVersion := "2.13.1"
 
-val circeVersion = "0.12.2"
-
-//resolvers += Resolver.sonatypeRepo("releases")
-//addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+scalacOptions += "-language:higherKinds"
+addCompilerPlugin("org.typelevel" %% "kind-projector" % "0.11.0" cross CrossVersion.full)
 
 libraryDependencies ++= Seq(
-  "io.circe" %% "circe-core",
-  "io.circe" %% "circe-generic",
-  "io.circe" %% "circe-generic-extras",
-  "io.circe" %% "circe-parser"
-).map(_ % circeVersion)
+  "io.circe" %% "circe-core" % "0.12.3",
+  "io.circe" %% "circe-generic" % "0.12.3",
+  "io.circe" %% "circe-parser" % "0.12.3",
+  "io.circe" %% "circe-generic-extras" % "0.12.2"
+)
+turbo := true

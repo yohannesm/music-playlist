@@ -1,3 +1,5 @@
+import Main.User
+
 import scala.collection.mutable
 
 class Users(private val inputUsers: Iterable[User]) extends Resources {

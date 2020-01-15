@@ -1,3 +1,5 @@
+import Main.{Operation, Playlist, Song}
+
 class OperationsEngine(operations: Iterable[Operation], songs: Songs, users: Users, playlists: Playlists) {
 
   def processOperations(): Unit ={
