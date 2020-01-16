@@ -38,12 +38,12 @@ object Main extends App {
 
     /***********************************************************************/
     //Start of MAIN
-    val (inputUsers, inputPlaylists, inputSongs) = handleInput()
+    val (inputUsers, inputPlaylists, inputSongs) = handleInput(args(0))
 
     val (processedUsers, processedPlayLists, processedSongs) =
-      handleOperations(operationFile = "changes.json", inputUsers, inputPlaylists, inputSongs)
+      handleOperations(operationFile = args(1), inputUsers, inputPlaylists, inputSongs)
 
-    handleOutput(outputFile = "output.json", processedUsers, processedPlayLists, processedSongs)
+    handleOutput(outputFile = args(2), processedUsers, processedPlayLists, processedSongs)
 
     //Technically end of MAIN
     /***************************************************************************/
