@@ -13,7 +13,12 @@ import scala.io.Source
 
 object Main extends App {
   //TODO: take in file through args.length and args(0), (1), (2).
-    args.foreach(println(_))
+//  if(args.length != 3)
+//    {
+//      println("Need 3 arguments for the program")
+//      System.exit(0)
+//    }
+
     implicit val genDevConfig: Configuration = Configuration.default.withDiscriminator("discriminator")
 
     sealed trait Resource
@@ -32,10 +37,15 @@ object Main extends App {
 
     case class Operation(id: Int, action: String, resource: String, metadata: Resource)
 
-    val (users, playlists, songs) = handleInput("mixtape-data.json")
-    handleOutput(users, playlists, songs)
 
-    def handleInput(inputJson: String): (Users, Playlists, Songs) = {
+    val (inputUsers, inputPlaylists, inputSongs) = handleInput()
+
+    val (processedUsers, processedPlayLists, processedSongs) =
+      handleOperations("changes.json", inputUsers, inputPlaylists, inputSongs)
+
+    handleOutput("output.json", inputUsers, inputPlaylists, inputSongs)
+
+    def handleInput(inputJson :String = "mixtape-data.json"): (Users, Playlists, Songs) = {
       val inputFile = Source.fromFile("mixtape-data.json").getLines.mkString
       val inputJson = parse(inputFile).getOrElse(Json.Null)
       //if JsonNull then throw some exception or printout failure
@@ -79,67 +89,46 @@ object Main extends App {
       (new Users(users), new Playlists(playlists), new Songs(songs))
     }
 
-    def handleOutput(users: Users, playlists: Playlists, songs: Songs): Unit = {
+    def handleOutput(outputFile: String, users: Users, playlists: Playlists, songs: Songs): Unit = {
       val outputUsers = OutputUsers(users.getUsers()).asJson
       val outputPlaylists = OutputPlayLists(playlists.getPlaylist()).asJson
       val outputSongs = OutputSongs(songs.getSongs()).asJson
       val listResources = Json.fromValues(List(outputUsers, outputPlaylists, outputSongs)).spaces2
-      Utility.writeFile(filename = "output.json", List(listResources))
-
+      Utility.writeFile(filename = outputFile, List(listResources))
     }
 
+    def handleOperations(operationFile: String,
+                       inputUsers: Users,
+                       inputPlaylists: Playlists,
+                       inputSongs: Songs) : (Users, Playlists, Songs) = {
+      val operationsFile = Source.fromFile(operationFile).getLines.mkString
+      val operationsJson = parse(operationsFile).getOrElse(Json.Null)
+      val opCursor = operationsJson.hcursor
+      //println(operationsJson)
 
-    //  implicit val userDecoder: Decoder[User] = deriveDecoder[User]
-    //  implicit val userEncoder: Encoder[User] = deriveEncoder[User]
-    //  implicit val playListDecoder: Decoder[Playlist] = deriveDecoder[Playlist]
-    //  implicit val playListEncoder: Encoder[Playlist] = deriveEncoder[Playlist]
-    //  implicit val SongDecoder: Decoder[Song] = deriveDecoder[Song]
-    //  implicit val SongEncoder: Encoder[Song] = deriveEncoder[Song]
-    //  implicit val OperationDecoder: Decoder[Operation] = deriveDecoder[Operation]
-    //  implicit val OperationEncoder: Encoder[Operation] = deriveEncoder[Operation]
-
-    //  object GenericDerivation {
-    //    implicit val encodeResource: Encoder[Resource] = Encoder.instance {
-    //      case song @ Song(_, _, _) => song.asJson
-    //      case playlist @ Playlist(_, _, _) => playlist.asJson
-    //      case user @ User( _, _) => user.asJson
-    //      case _ => throw new RuntimeException("This encoding for Resource type is not supported")
-    //    }
-    //
-    //    implicit val decodeResource: Decoder[Resource] = Decoder.instance {
-    //      List[Decoder[Resource]](
-    //        Decoder[Song].widen, Decoder[User].widen, Decoder[Playlist].widen
-    //      ).reduceLeft(_ or _)
-    //    }
-    //  }
-
-    println("Main is running!")
-
-    //println(songs)
-
-    //now need to parse the operations.
-
-    val operationsFile = Source.fromFile("small-operations.json").getLines.mkString
-    val operationsJson = parse(operationsFile).getOrElse(Json.Null)
-    val opCursor = operationsJson.hcursor
-    //println(operationsJson)
-
-    val decodedOperations = opCursor.downField("operations").values.get.map(_.as[Operation])
-    val operations = decodedOperations.map { eitherOp =>
-      eitherOp match {
-        case Left(failure) => {
-          println(s"Failed in decoding because of $failure")
-          Operation(-1, "", "", Song(-1, "", ""))
+      val decodedOperations = opCursor.downField("operations").values.get.map(_.as[Operation])
+      val operations = decodedOperations.map { eitherOp =>
+        eitherOp match {
+          case Left(failure) => {
+            println(s"Failed in decoding because of $failure")
+            Operation(-1, "", "", Song(-1, "", ""))
+          }
+          case Right(op) => op
         }
-        case Right(op) => op
-      }
-    }.filterNot(_.id == -1)
+      }.filterNot(_.id == -1)
 
-    //println(operations)
+      println(operations)
+      val opEngine = new OperationsEngine(operations, inputSongs, inputUsers, inputPlaylists)
+      opEngine.processOperations()
+      val processedUsers = opEngine.getProcessedUsers()
+      val processedPlaylists = opEngine.getProcessedPlaylists()
+      val processedSongs = opEngine.getProcessedSongs()
 
-    //-----------------end input part
-    //--------------start output part
+      //(inputUsers, inputPlaylists, inputSongs)
+      (processedUsers, processedPlaylists, processedSongs)
+    }
 
+   println("The program has ran successfully")
 }
 
 object Utility{

@@ -1,0 +1,143 @@
+{
+  "operations": [
+    {
+      "id": "0",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "41",
+        "artist": "Kenshi Yonezu",
+        "title": "Peace Sign",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "1",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "42",
+        "artist": "Taylor Swift",
+        "title": "Cruel Summer",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "2",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "43",
+        "artist": "Patrick Braska & Jay Chou",
+        "title": "Try",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "3",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "44",
+        "artist": "Ronan Keating",
+        "title": "When you say nothing at all",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "4",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "45",
+        "artist": "Aerith Theme",
+        "title": "Nobuo Uematsu",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "5",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "46",
+        "artist": "Aimer",
+        "title": "After Rain",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "6",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "47",
+        "artist": "VAMPS",
+        "title": "Personal",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "7",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "48",
+        "artist": "Michael Buble",
+        "title": "Have not met you yet",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "8",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "49",
+        "artist": "Uverworld",
+        "title": "Odd Future",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "9",
+      "action": "add",
+      "resource": "song",
+      "metadata": {
+        "id": "50",
+        "artist": "Blue Encount",
+        "title": "Polaris",
+        "discriminator": "Song"
+      }
+    },
+    {
+      "id": "10",
+      "action": "add",
+      "resource": "playlist",
+      "metadata": {
+        "id": "4",
+        "user_id": "6",
+        "song_ids": [
+          "1",
+          "41",
+          "21"
+        ],
+        "discriminator": "Playlist"
+      }
+    },
+    {
+      "id": "11",
+      "action": "delete",
+      "resource": "playlist",
+      "metadata": {
+        "id": "1",
+        "user_id": "2",
+        "song_ids": [
+          "8",
+          "32"
+        ],
+        "discriminator": "Playlist"
+      }
+    }
+  ]
+}

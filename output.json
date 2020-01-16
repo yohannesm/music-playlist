@@ -34,14 +34,6 @@
   {
     "playlists" : [
       {
-        "id" : 1,
-        "user_id" : 2,
-        "song_ids" : [
-          8,
-          32
-        ]
-      },
-      {
         "id" : 2,
         "user_id" : 3,
         "song_ids" : [
@@ -59,6 +51,15 @@
           13,
           16,
           2
+        ]
+      },
+      {
+        "id" : 4,
+        "user_id" : 6,
+        "song_ids" : [
+          1,
+          41,
+          21
         ]
       }
     ]
@@ -264,6 +265,56 @@
         "id" : 40,
         "artist" : "Imagine Dragons",
         "title" : "Thunder"
+      },
+      {
+        "id" : 41,
+        "artist" : "Kenshi Yonezu",
+        "title" : "Peace Sign"
+      },
+      {
+        "id" : 42,
+        "artist" : "Taylor Swift",
+        "title" : "Cruel Summer"
+      },
+      {
+        "id" : 43,
+        "artist" : "Patrick Braska & Jay Chou",
+        "title" : "Try"
+      },
+      {
+        "id" : 44,
+        "artist" : "Ronan Keating",
+        "title" : "When you say nothing at all"
+      },
+      {
+        "id" : 45,
+        "artist" : "Aerith Theme",
+        "title" : "Nobuo Uematsu"
+      },
+      {
+        "id" : 46,
+        "artist" : "Aimer",
+        "title" : "After Rain"
+      },
+      {
+        "id" : 47,
+        "artist" : "VAMPS",
+        "title" : "Personal"
+      },
+      {
+        "id" : 48,
+        "artist" : "Michael Buble",
+        "title" : "Have not met you yet"
+      },
+      {
+        "id" : 49,
+        "artist" : "Uverworld",
+        "title" : "Odd Future"
+      },
+      {
+        "id" : 50,
+        "artist" : "Blue Encount",
+        "title" : "Polaris"
       }
     ]
   }

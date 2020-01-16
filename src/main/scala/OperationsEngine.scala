@@ -38,4 +38,8 @@ class OperationsEngine(operations: Iterable[Operation], songs: Songs, users: Use
   }
 
   def handleUser(op: Operation) = ???
+
+  def getProcessedUsers(): Users = this.users
+  def getProcessedPlaylists(): Playlists = this.playlists
+  def getProcessedSongs(): Songs = this.songs
 }
