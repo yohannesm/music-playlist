@@ -12,12 +12,11 @@ import io.circe.parser._
 import scala.io.Source
 
 object Main extends App {
-  //TODO: take in file through args.length and args(0), (1), (2).
-//  if(args.length != 3)
-//    {
-//      println("Need 3 arguments for the program")
-//      System.exit(0)
-//    }
+  if(args.length != 3)
+    {
+      println("Need 3 arguments for the program")
+      System.exit(0)
+    }
 
     implicit val genDevConfig: Configuration = Configuration.default.withDiscriminator("discriminator")
 
@@ -37,13 +36,17 @@ object Main extends App {
 
     case class Operation(id: Int, action: String, resource: String, metadata: Resource)
 
-
+    /***********************************************************************/
+    //Start of MAIN
     val (inputUsers, inputPlaylists, inputSongs) = handleInput()
 
     val (processedUsers, processedPlayLists, processedSongs) =
-      handleOperations("changes.json", inputUsers, inputPlaylists, inputSongs)
+      handleOperations(operationFile = "changes.json", inputUsers, inputPlaylists, inputSongs)
 
-    handleOutput("output.json", inputUsers, inputPlaylists, inputSongs)
+    handleOutput(outputFile = "output.json", processedUsers, processedPlayLists, processedSongs)
+
+    //Technically end of MAIN
+    /***************************************************************************/
 
     def handleInput(inputJson :String = "mixtape-data.json"): (Users, Playlists, Songs) = {
       val inputFile = Source.fromFile("mixtape-data.json").getLines.mkString
@@ -61,7 +64,6 @@ object Main extends App {
           case Right(user) => user
         }
       }.filterNot(_.id == -1)
-      //println(users)
 
       val decodedPlaylists = cursor.downField("playlists").values.getOrElse(Vector.empty[Json]).map(_.as[Playlist])
       val playlists = decodedPlaylists.map { eitherPlaylist =>
@@ -73,7 +75,6 @@ object Main extends App {
           case Right(playlist) => playlist
         }
       }.filterNot(_.id == -1)
-      //println(playlists)
 
       val decodedSongs = cursor.downField("songs").values.getOrElse(Vector.empty[Json]).map(_.as[Song])
       val songs = decodedSongs.map { eitherSongs =>
@@ -104,7 +105,6 @@ object Main extends App {
       val operationsFile = Source.fromFile(operationFile).getLines.mkString
       val operationsJson = parse(operationsFile).getOrElse(Json.Null)
       val opCursor = operationsJson.hcursor
-      //println(operationsJson)
 
       val decodedOperations = opCursor.downField("operations").values.get.map(_.as[Operation])
       val operations = decodedOperations.map { eitherOp =>
@@ -117,14 +117,12 @@ object Main extends App {
         }
       }.filterNot(_.id == -1)
 
-      println(operations)
       val opEngine = new OperationsEngine(operations, inputSongs, inputUsers, inputPlaylists)
       opEngine.processOperations()
       val processedUsers = opEngine.getProcessedUsers()
       val processedPlaylists = opEngine.getProcessedPlaylists()
       val processedSongs = opEngine.getProcessedSongs()
 
-      //(inputUsers, inputPlaylists, inputSongs)
       (processedUsers, processedPlaylists, processedSongs)
     }
 

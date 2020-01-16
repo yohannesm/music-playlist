@@ -127,6 +127,89 @@
     },
     {
       "id": "11",
+      "action": "add",
+      "resource": "playlist",
+      "metadata": {
+        "id": "5",
+        "user_id": "7",
+        "song_ids": [
+          "35",
+          "50",
+          "49",
+          "22"
+        ],
+        "discriminator": "Playlist"
+      }
+    },
+    {
+      "id": "12",
+      "action": "add",
+      "resource": "playlist",
+      "metadata": {
+        "id": "5",
+        "user_id": "7",
+        "song_ids": [
+          "35",
+          "50",
+          "49",
+          "22"
+        ],
+        "discriminator": "Playlist"
+      }
+    },
+    {
+      "id": "13",
+      "action": "add",
+      "resource": "playlist",
+      "metadata": {
+        "id": "6",
+        "user_id": "2",
+        "song_ids": [
+          "2",
+          "4",
+          "18",
+          "32",
+          "34"
+        ],
+        "discriminator": "Playlist"
+      }
+    },
+    {
+      "id": "14",
+      "action": "add",
+      "resource": "playlist",
+      "metadata": {
+        "id": "7",
+        "user_id": "5",
+        "song_ids": [
+          "13",
+          "25",
+          "27",
+          "36",
+          "45"
+        ],
+        "discriminator": "Playlist"
+      }
+    },
+    {
+      "id": "15",
+      "action": "add",
+      "resource": "playlist",
+      "metadata": {
+        "id": "8",
+        "user_id": "4",
+        "song_ids": [
+          "8",
+          "11",
+          "41",
+          "42",
+          "46"
+        ],
+        "discriminator": "Playlist"
+      }
+    },
+    {
+      "id": "16",
       "action": "delete",
       "resource": "playlist",
       "metadata": {
@@ -135,6 +218,23 @@
         "song_ids": [
           "8",
           "32"
+        ],
+        "discriminator": "Playlist"
+      }
+    },
+    {
+      "id": "17",
+      "action": "delete",
+      "resource": "playlist",
+      "metadata": {
+        "id": "6",
+        "user_id": "2",
+        "song_ids": [
+          "2",
+          "4",
+          "18",
+          "32",
+          "34"
         ],
         "discriminator": "Playlist"
       }
