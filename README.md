@@ -6,6 +6,7 @@ Please look up on the internet on how to install them depending on your OS.
 Next, you can call the app with `sbt run` and then its command line arguments
 example : `sbt "run mixtape-data.json changes.json output.json" `
 NB: The quote["] is really important because of how command line string is being parsed
+NB2: I made this project with IntelliJ and you can opened it in there for ease of use
 
 ## changes.json Example explanation
 So I added new songs from id 41 - 50. I added new playlists of id 4-8. Then, I removed playlist of id 1 and id 6.
